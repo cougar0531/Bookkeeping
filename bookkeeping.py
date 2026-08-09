@@ -1,4 +1,4 @@
-# 記帳軟體 v0.2 - 新增刪除記錄功能
+# 記帳軟體 v0.3 - 新增分類統計功能
 
 records = []
 
@@ -29,15 +29,32 @@ def show_records():
         print(f"{i}. {r['date']} | {r['description']} | ${r['amount']} | {r['category']}")
     print("-" * 40)
 
+def show_summary():
+    if not records:
+        print("目前沒有任何記錄")
+        return
+    summary = {}
+    for r in records:
+        category = r["category"]
+        summary[category] = summary.get(category, 0) + r["amount"]
+    total = sum(summary.values())
+    print("\n📊 分類統計：")
+    print("-" * 40)
+    for category, amount in summary.items():
+        percentage = (amount / total) * 100
+        print(f"{category}：${amount}（{percentage:.1f}%）")
+    print("-" * 40)
+    print(f"總計：${total}")
+
 def main():
-    print("=== 記帳軟體 v0.2 ===")
+    print("=== 記帳軟體 v0.3 ===")
     add_record("2025-01-01", "早餐", 80, "餐飲")
     add_record("2025-01-01", "捷運", 30, "交通")
     add_record("2025-01-02", "午餐", 120, "餐飲")
+    add_record("2025-01-02", "計程車", 200, "交通")
+    add_record("2025-01-03", "晚餐", 150, "餐飲")
     show_records()
-    print("\n刪除第 1 筆記錄...")
-    delete_record(1)
-    show_records()
+    show_summary()
 
 if __name__ == "__main__":
     main()
