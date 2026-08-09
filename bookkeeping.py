@@ -1,6 +1,25 @@
-# 記帳軟體 v0.3 - 新增分類統計功能
+# 記帳軟體 v0.4 - 新增存檔/讀檔功能
 
+import json
+import os
+
+DATA_FILE = "records.json"
 records = []
+
+def load_records():
+    global records
+    if os.path.exists(DATA_FILE):
+        with open(DATA_FILE, "r", encoding="utf-8") as f:
+            records = json.load(f)
+        print(f"📂 已載入 {len(records)} 筆記錄")
+    else:
+        records = []
+        print("📂 尚無儲存資料，從空白開始")
+
+def save_records():
+    with open(DATA_FILE, "w", encoding="utf-8") as f:
+        json.dump(records, f, ensure_ascii=False, indent=2)
+    print(f"💾 已儲存 {len(records)} 筆記錄")
 
 def add_record(date, description, amount, category):
     record = {
@@ -47,14 +66,13 @@ def show_summary():
     print(f"總計：${total}")
 
 def main():
-    print("=== 記帳軟體 v0.3 ===")
-    add_record("2025-01-01", "早餐", 80, "餐飲")
-    add_record("2025-01-01", "捷運", 30, "交通")
-    add_record("2025-01-02", "午餐", 120, "餐飲")
-    add_record("2025-01-02", "計程車", 200, "交通")
-    add_record("2025-01-03", "晚餐", 150, "餐飲")
+    print("=== 記帳軟體 v0.4 ===")
+    load_records()
+    add_record("2025-01-04", "早餐", 60, "餐飲")
+    add_record("2025-01-04", "公車", 20, "交通")
     show_records()
     show_summary()
+    save_records()
 
 if __name__ == "__main__":
     main()
